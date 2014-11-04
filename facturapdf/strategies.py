@@ -111,33 +111,36 @@ class DefaultStrategy(Strategy):
             rows_data.append(fill_with)
 
         rows_data.insert(0, ['Descripción', 'Unitario', 'Unidades', 'Total'])
-        # todo Remove hardcoded value!
-        rows_data.append(['', '', 'Subtotal', '5000,00 €'])
 
-        return self.create_table(
-            rows_data,
-            col_widths=[
-                110 * self.UNITS, '*', '*', '*',
-                ],
-            style=[
-                ('GRID', (0, 0), (-1, 0), 0.6, colors.black),
-                ('BOX', (0, 1), (-1, -2), 0.6, colors.black),
-
-                # Titles
-                ('BACKGROUND', (0, 0), (-1, 0), HexColor(0x0096FF)),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-
-                # Subtotal
+        if show_subtotal:
+            # todo Remove hardcoded value!
+            rows_data.append(['', '', 'Subtotal', '5000,00 €'])
+            table_style = [
                 ('TEXTCOLOR', (2, -1), (-2, -1), colors.white),
                 ('BACKGROUND', (2, -1), (-2, -1), HexColor(0x0096FF)),
                 ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
                 ('GRID', (2, -1), (-1, -1), 0.6, colors.black),
+            ]
+            box_limit = -2
+        else:
+            table_style = []
+            box_limit = -1
 
-                # Alinear precios a la derecha
-                ('ALIGN', (1, 1), (-1, -2), 'RIGHT'),
-                ('ALIGN', (-1, -1), (-1, -1), 'RIGHT'),
-                ],
-            )
+        table_style.extend([
+            ('GRID', (0, 0), (-1, 0), 0.6, colors.black),
+            ('BOX', (0, 1), (-1, box_limit), 0.6, colors.black),
+            # Titles
+            ('BACKGROUND', (0, 0), (-1, 0), HexColor(0x0096FF)),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            # Alinear precios a la derecha
+            ('ALIGN', (1, 1), (-1, -2), 'RIGHT'),
+            ('ALIGN', (-1, -1), (-1, -1), 'RIGHT'),
+
+        ])
+
+        return self.create_table(
+            rows_data, col_widths=[110 * self.UNITS, '*', '*', '*',], style=table_style
+        )
 
     def create_invoice_footer(self):
         # todo Remove hardcoded data
