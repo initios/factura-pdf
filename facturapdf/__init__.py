@@ -10,16 +10,18 @@ from .dtos import Customer
 class InvoiceGenerator:
     styles = getSampleStyleSheet()
 
+    HEADER_TEXT = 'Calle de la empresa 2, bajo - oficina 3'
+
     def __init__(self, strategy=None, template=None):
         self.invoice_text_style = self.styles.get('Normal')
         self.strategy = strategy or DefaultStrategy()
         self.template = template or DefaultTemplate()
 
-    def generate(self, destination_file, header_logo, rows, customer, metadata, header_text):
+    def generate(self, destination_file, header_logo, rows, customer, metadata):
         doc = self.template.create_document(destination_file)
 
         # Generation of shared flowables
-        header = self.strategy.create_header(header_logo, header_text, self.invoice_text_style)
+        header = self.strategy.create_header(header_logo, self.HEADER_TEXT, self.invoice_text_style)
         customer_section = self.strategy.create_customer_table(customer, self.invoice_text_style)
         invoice_footer = self.strategy.create_invoice_footer()
         footer = self.strategy.create_footer('Footer text with company legal information',

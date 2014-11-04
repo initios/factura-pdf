@@ -17,11 +17,12 @@ class TestCase(unittest.TestCase):
         self.assertTrue(splitext(file)[1] == '.pdf')
 
 
+# See below the CustomInvoiceGenerator class
 class CreateInvoiceTest(TestCase):
     def setUp(self):
         self.file = os.path.join(get_output_folder(), "output.pdf")
         self.initios_logo = get_initios_logo_path()
-        self.invoice_generator = InvoiceGenerator()
+        self.invoice_generator = CustomInvoiceGenerator()
 
     def test_can_create_an_invoice(self):
         customer = Customer(
@@ -34,8 +35,17 @@ class CreateInvoiceTest(TestCase):
         metadata = Metadata(
             doc_type='FACTURA', code='FRA SER 14-2014', serie='SER', date='01/12/2014'
         )
-        header_text = 'Calle de la empresa 2, bajo - oficina 3'
 
-        self.invoice_generator.generate(self.file, self.initios_logo, rows, customer, metadata, header_text)
+        self.invoice_generator.generate(self.file, self.initios_logo, rows, customer, metadata)
         self.assertIsFile(self.file)
         self.assertExtension(self.file, 'pdf')
+
+
+# Most of the invoice texts is static, only the rows and totals are
+# changing from one document to another, so the idea is that you override
+# some of the properties of the InvoiceGenerator and use that class
+# to create your invoices
+class CustomInvoiceGenerator(InvoiceGenerator):
+    def __init__(self, strategy=None, template=None):
+        super().__init__(strategy, template)
+        self.HEADER_TEXT = 'This is a custom header text for my invoice'
