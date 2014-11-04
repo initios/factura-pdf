@@ -1,9 +1,7 @@
 from abc import ABCMeta, abstractmethod
-from reportlab.lib import colors
-from reportlab.lib.colors import HexColor
 from reportlab.lib.units import mm
 from reportlab.platypus import Table, Paragraph, Spacer, FrameBreak
-from facturapdf import SimpleLine
+from facturapdf import SimpleLine, DefaultStyling
 from facturapdf.helper import get_image
 
 
@@ -28,12 +26,18 @@ class Strategy:
     INVOICE_FOOTER_SECTION_A_TITLES = ['Base imponible', 'Impuestos aplicados', '% impuestos', 'Importe impuestos', 'Total factura']
     INVOICE_FOOTER_SECTION_B_TITLES = ['Tipo de pago', 'Entidad', 'Cuenta', 'Vencimiento']
 
+    def __init__(self, styling=None):
+        self.styling = styling or DefaultStyling()
+
+        super().__init__()
+
+
     @abstractmethod
-    def create_table(self, data, col_widths='*', row_heights=None, style=None):
+    def create_table(self, data, col_widths='*', row_heights=None):
         pass
 
     @abstractmethod
-    def create_customer_table(self, customer, style):
+    def create_customer_table(self, customer):
         pass
 
     @abstractmethod
@@ -41,62 +45,55 @@ class Strategy:
         pass
 
     @abstractmethod
-    def create_rows_table(self, rows_data, style, sbutotal, max_items=10, fill_with=[]):
+    def create_rows_table(self, rows_data, subtotal, max_items=10, fill_with=[]):
         pass
 
     @abstractmethod
-    def create_invoice_footer(self):
+    def create_invoice_footer(self, footer_a_data, footer_b_data):
         pass
 
     @abstractmethod
-    def create_header(self, header_logo, header_text, style):
+    def create_header(self, header_logo, header_text):
         pass
 
     @abstractmethod
-    def create_footer(self, text, units, style, footer_a_data, footer_b_data):
+    def create_footer(self, text, units):
         pass
 
 
 class DefaultStrategy(Strategy):
-    def create_table(self, data, col_widths='*', row_heights=None, style=None):
+    def create_table(self, data, col_widths='*', row_heights=None):
         return Table(
             data=data,
             colWidths=col_widths, rowHeights=row_heights,
-            style=style or (
-                [
-                    ('GRID', (0, 0), (-1, -1), 0.6, colors.black),
-                    ('BACKGROUND', (0, 0), (-1, 0), HexColor(0x0096FF)),
-                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-                    ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-                    ]
-            )
+            style=self.styling.table
         )
 
-    def create_customer_table(self, customer, style):
+    def create_customer_table(self, customer):
         section_a = self.create_table([
                                           self.CUSTOMER_SECTION_A_TITLES,
                                           [
-                                              Paragraph(customer.code, style),
-                                              Paragraph(customer.name, style), customer.vat],
+                                              Paragraph(customer.code, self.styling.invoice_text),
+                                              Paragraph(customer.name, self.styling.invoice_text), customer.vat],
                                           ], col_widths=[35 * self.UNITS, 110 * self.UNITS, '*']
         )
 
         section_b = self.create_table([
                                           self.CUSTOMER_SECTION_B_TITLES,
-                                          [Paragraph(customer.address, style),
-                                           Paragraph(customer.city, style)]
+                                          [Paragraph(customer.address, self.styling.invoice_text),
+                                           Paragraph(customer.city, self.styling.invoice_text)]
                                       ], col_widths=[135 * self.UNITS, '*'])
 
         section_c = self.create_table([
                                           self.CUSTOMER_SECTION_C_TITLES,
-                                          [customer.postal_code, Paragraph(customer.province, style),
-                                           Paragraph(customer.country, style)]
+                                          [customer.postal_code, Paragraph(customer.province, self.styling.invoice_text),
+                                           Paragraph(customer.country, self.styling.invoice_text)]
                                       ], col_widths=[25 * self.UNITS, '*', '*'])
 
         section_d = self.create_table([
             self.CUSTOMER_SECTION_D_TITLES,
-            [Paragraph(customer.contact_name, style), Paragraph(customer.contact_phone, style),
-             Paragraph(customer.contact_name, style)]
+            [Paragraph(customer.contact_name, self.styling.invoice_text), Paragraph(customer.contact_phone, self.styling.invoice_text),
+             Paragraph(customer.contact_name, self.styling.invoice_text)]
         ])
 
         return [section_a] + [section_b] + [section_c] + \
@@ -111,9 +108,9 @@ class DefaultStrategy(Strategy):
                 ), Spacer(0 * self.UNITS, 5 * self.UNITS)
         ]
 
-    def create_rows_table(self, rows_data, style, subtotal, max_items=10, fill_with=[], show_subtotal=False):
+    def create_rows_table(self, rows_data, subtotal, max_items=10, fill_with=[], show_subtotal=False):
         for row in rows_data:
-            row[0] = Paragraph(row[0], style)
+            row[0] = Paragraph(row[0], self.styling.invoice_text)
 
         # Fill rows with the fill_with if applies
         while len(rows_data) < max_items:
@@ -122,33 +119,13 @@ class DefaultStrategy(Strategy):
         rows_data.insert(0, self.TABLE_ROWS_TITLES)
 
         if show_subtotal:
-            # todo Remove hardcoded value!
             rows_data.append(['', '', self.SUBTOTAL_TEXT, subtotal])
-            table_style = [
-                ('TEXTCOLOR', (2, -1), (-2, -1), colors.white),
-                ('BACKGROUND', (2, -1), (-2, -1), HexColor(0x0096FF)),
-                ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-                ('GRID', (2, -1), (-1, -1), 0.6, colors.black),
-            ]
-            box_limit = -2
+            table_style = self.styling.table_rows_with_subtotal
         else:
-            table_style = []
-            box_limit = -1
-
-        table_style.extend([
-            ('GRID', (0, 0), (-1, 0), 0.6, colors.black),
-            ('BOX', (0, 1), (-1, box_limit), 0.6, colors.black),
-            # Titles
-            ('BACKGROUND', (0, 0), (-1, 0), HexColor(0x0096FF)),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-            # Alinear precios a la derecha
-            ('ALIGN', (1, 1), (-1, -2), 'RIGHT'),
-            ('ALIGN', (-1, -1), (-1, -1), 'RIGHT'),
-
-        ])
+            table_style = self.styling.table_rows_without_subtotal
 
         return self.create_table(
-            rows_data, col_widths=[110 * self.UNITS, '*', '*', '*',], style=table_style
+            rows_data, col_widths=[110 * self.UNITS, '*', '*', '*',]
         )
 
     def create_invoice_footer(self, footer_a_data, footer_b_data):
@@ -160,18 +137,18 @@ class DefaultStrategy(Strategy):
         return [Spacer(0, 5 * self.UNITS)] + [invoice_footer_a] + [Spacer(0, 5 * self.UNITS)] \
                          + [invoice_footer_b] + [Spacer(0, 5 * self.UNITS)]
 
-    def create_header(self, header_logo, header_text, style):
+    def create_header(self, header_logo, header_text):
         return [
             get_image(header_logo, 40 * self.UNITS),
             FrameBreak(),
-            Paragraph(header_text, style),
+            Paragraph(header_text, self.styling.invoice_text),
             FrameBreak(),
             Spacer(0, 5 * self.UNITS),
         ]
 
-    def create_footer(self, text, units, style):
+    def create_footer(self, text, units):
         return [
             FrameBreak(),
             SimpleLine(185 * units, 0.1 * units),
-            Paragraph(text, style)
+            Paragraph(text, self.styling.invoice_text)
         ]

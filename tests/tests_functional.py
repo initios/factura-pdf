@@ -50,17 +50,18 @@ class CreateInvoiceTest(TestCase):
 
 # You can also override strategies or templates. They exist to be overrided
 # Check the following example that is using the functional test
-class CustomInvoiceGenerator(InvoiceGenerator):
-    def __init__(self, strategy=None, template=None):
-        # Please see that I am using CustomStrategy here
-        super().__init__(CustomStrategy(), template)
-
-        self.HEADER_TEXT = 'This is a custom header text for my invoice'
-        self.HEADER_LOGO = get_initios_logo_path()
-
 
 class CustomStrategy(DefaultStrategy):
     def __init__(self):
         super().__init__()
 
         self.CUSTOMER_SECTION_A_TITLES = ['Customer code', 'Name', 'CIF']
+
+
+class CustomInvoiceGenerator(InvoiceGenerator):
+    # Please note that I am using a CustomStrategy here
+    def __init__(self, strategy=CustomStrategy(), template=None):
+        super().__init__(strategy, template)
+
+        self.HEADER_TEXT = 'This is a custom header text for my invoice'
+        self.HEADER_LOGO = get_initios_logo_path()
