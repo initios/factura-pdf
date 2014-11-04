@@ -21,7 +21,6 @@ class TestCase(unittest.TestCase):
 class CreateInvoiceTest(TestCase):
     def setUp(self):
         self.file = os.path.join(get_output_folder(), "output.pdf")
-        self.initios_logo = get_initios_logo_path()
         self.invoice_generator = CustomInvoiceGenerator()
 
     def test_can_create_an_invoice(self):
@@ -36,7 +35,7 @@ class CreateInvoiceTest(TestCase):
             doc_type='FACTURA', code='FRA SER 14-2014', serie='SER', date='01/12/2014'
         )
 
-        self.invoice_generator.generate(self.file, self.initios_logo, rows, customer, metadata)
+        self.invoice_generator.generate(self.file, rows, customer, metadata)
         self.assertIsFile(self.file)
         self.assertExtension(self.file, 'pdf')
 
@@ -49,3 +48,4 @@ class CustomInvoiceGenerator(InvoiceGenerator):
     def __init__(self, strategy=None, template=None):
         super().__init__(strategy, template)
         self.HEADER_TEXT = 'This is a custom header text for my invoice'
+        self.HEADER_LOGO = get_initios_logo_path()
