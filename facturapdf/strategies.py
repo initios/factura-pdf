@@ -18,6 +18,8 @@ class Strategy:
 
     UNITS = mm
 
+    CUSTOMER_SECTION_A_TITLES = ['Código de cliente', 'Nombre', 'CIF/NIF']
+
     @abstractmethod
     def create_table(self, data, col_widths='*', row_heights=None, style=None):
         pass
@@ -64,7 +66,7 @@ class DefaultStrategy(Strategy):
 
     def create_customer_table(self, customer, style):
         section_a = self.create_table([
-                                          ['Código de cliente', 'Nombre', 'CIF/NIF'],
+                                          self.CUSTOMER_SECTION_A_TITLES,
                                           [
                                               Paragraph(customer.code, style),
                                               Paragraph(customer.name, style), customer.vat],

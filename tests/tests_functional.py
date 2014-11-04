@@ -1,6 +1,6 @@
 import os
 import unittest
-from facturapdf import InvoiceGenerator
+from facturapdf import InvoiceGenerator, DefaultStrategy
 from tests.helper import get_output_folder, get_initios_logo_path
 from os.path import isdir, isfile, splitext
 from facturapdf.dtos import Customer, Metadata
@@ -44,9 +44,20 @@ class CreateInvoiceTest(TestCase):
 # changing from one document to another, so the idea is that you override
 # some of the properties of the InvoiceGenerator and use that class
 # to create your invoices
+
+# You can also override strategies or templates. They exist to be overrided
+# Check the following example that is using the functional test
 class CustomInvoiceGenerator(InvoiceGenerator):
     def __init__(self, strategy=None, template=None):
-        super().__init__(strategy, template)
+        # Please see that I am using CustomStrategy here
+        super().__init__(CustomStrategy(), template)
 
         self.HEADER_TEXT = 'This is a custom header text for my invoice'
         self.HEADER_LOGO = get_initios_logo_path()
+
+
+class CustomStrategy(DefaultStrategy):
+    def __init__(self):
+        super().__init__()
+
+        self.CUSTOMER_SECTION_A_TITLES = ['Customer code', 'Name', 'CIF']
