@@ -23,7 +23,7 @@ class CreateInvoiceTest(TestCase):
         self.initios_logo = get_initios_logo_path()
         self.invoice_generator = InvoiceGenerator()
 
-    def test_can_create_a_invoice(self):
+    def test_can_create_an_invoice(self):
         customer = Customer(
             code='CUS1', name='Example Customer Name', vat='123456789X',
             address='Long address from our customer', city='Vigo',
