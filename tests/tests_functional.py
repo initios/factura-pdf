@@ -34,7 +34,8 @@ class CreateInvoiceTest(TestCase):
         metadata = Metadata(
             doc_type='FACTURA', code='FRA SER 14-2014', serie='SER', date='01/12/2014'
         )
+        header_text = 'Calle de la empresa 2, bajo - oficina 3'
 
-        self.invoice_generator.generate(self.file, self.initios_logo, rows, customer, metadata)
+        self.invoice_generator.generate(self.file, self.initios_logo, rows, customer, metadata, header_text)
         self.assertIsFile(self.file)
         self.assertExtension(self.file, 'pdf')

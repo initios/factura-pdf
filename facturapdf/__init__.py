@@ -15,12 +15,11 @@ class InvoiceGenerator:
         self.strategy = strategy or DefaultStrategy()
         self.template = template or DefaultTemplate()
 
-    def generate(self, destination_file, header_logo, rows, customer, metadata):
+    def generate(self, destination_file, header_logo, rows, customer, metadata, header_text):
         doc = self.template.create_document(destination_file)
 
         # Generation of shared flowables
-        header = self.strategy.create_header(header_logo,
-                                             'Calle de la empresa 2, bajo - oficina 3', self.invoice_text_style)
+        header = self.strategy.create_header(header_logo, header_text, self.invoice_text_style)
         customer_section = self.strategy.create_customer_table(customer, self.invoice_text_style)
         invoice_footer = self.strategy.create_invoice_footer()
         footer = self.strategy.create_footer('Footer text with company legal information',
