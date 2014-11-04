@@ -34,8 +34,11 @@ class CreateInvoiceTest(TestCase):
         metadata = Metadata(
             doc_type='FACTURA', code='FRA SER 14-2014', serie='SER', date='01/12/2014'
         )
+        subtotal = '5000,00 €'
+        footer_a_data = ['475,00 €', 'I.V.A.', '21%', '99,75 €', '574,75 €']
+        footer_b_data = ['TRANSFER', 'MY ENTITY', 'ER 19281 12 1234567889', '30 días']
 
-        self.invoice_generator.generate(self.file, rows, customer, metadata)
+        self.invoice_generator.generate(self.file, rows, customer, metadata, subtotal, footer_a_data, footer_b_data)
         self.assertIsFile(self.file)
         self.assertExtension(self.file, 'pdf')
 

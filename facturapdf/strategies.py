@@ -19,6 +19,14 @@ class Strategy:
     UNITS = mm
 
     CUSTOMER_SECTION_A_TITLES = ['Código de cliente', 'Nombre', 'CIF/NIF']
+    CUSTOMER_SECTION_B_TITLES = ['Dirección', 'Localidad']
+    CUSTOMER_SECTION_C_TITLES = ['Cód. postal', 'Provincia', 'País']
+    CUSTOMER_SECTION_D_TITLES = ['Persona de contacto', 'Teléfono', 'E-mail']
+    METADATA_TITLES = ['DOCUMENTO', 'CÓDIGO', 'SERIE', 'FECHA', 'PÁGINA']
+    TABLE_ROWS_TITLES = ['Descripción', 'Unitario', 'Unidades', 'Total']
+    SUBTOTAL_TEXT = 'Subtotal'
+    INVOICE_FOOTER_SECTION_A_TITLES = ['Base imponible', 'Impuestos aplicados', '% impuestos', 'Importe impuestos', 'Total factura']
+    INVOICE_FOOTER_SECTION_B_TITLES = ['Tipo de pago', 'Entidad', 'Cuenta', 'Vencimiento']
 
     @abstractmethod
     def create_table(self, data, col_widths='*', row_heights=None, style=None):
@@ -33,7 +41,7 @@ class Strategy:
         pass
 
     @abstractmethod
-    def create_rows_table(self, rows_data, style, max_items=10, fill_with=[]):
+    def create_rows_table(self, rows_data, style, sbutotal, max_items=10, fill_with=[]):
         pass
 
     @abstractmethod
@@ -45,7 +53,7 @@ class Strategy:
         pass
 
     @abstractmethod
-    def create_footer(self, text, units, style):
+    def create_footer(self, text, units, style, footer_a_data, footer_b_data):
         pass
 
 
@@ -74,19 +82,19 @@ class DefaultStrategy(Strategy):
         )
 
         section_b = self.create_table([
-                                          ['Dirección', 'Localidad'],
+                                          self.CUSTOMER_SECTION_B_TITLES,
                                           [Paragraph(customer.address, style),
                                            Paragraph(customer.city, style)]
                                       ], col_widths=[135 * self.UNITS, '*'])
 
         section_c = self.create_table([
-                                          ['Cód. postal', 'Provincia', 'País'],
+                                          self.CUSTOMER_SECTION_C_TITLES,
                                           [customer.postal_code, Paragraph(customer.province, style),
                                            Paragraph(customer.country, style)]
                                       ], col_widths=[25 * self.UNITS, '*', '*'])
 
         section_d = self.create_table([
-            ['Persona de contacto', 'Teléfono', 'E-mail'],
+            self.CUSTOMER_SECTION_D_TITLES,
             [Paragraph(customer.contact_name, style), Paragraph(customer.contact_phone, style),
              Paragraph(customer.contact_name, style)]
         ])
@@ -96,15 +104,14 @@ class DefaultStrategy(Strategy):
 
     def create_metadata_table(self, current_page, total_pages, metadata):
         return [
-            self.create_table(
-                [['DOCUMENTO', 'CÓDIGO', 'SERIE', 'FECHA', 'PÁGINA'], metadata.as_list() +
-                 ['%i de %i' % (current_page, total_pages,)]],
+            self.create_table([
+                self.METADATA_TITLES,
+                metadata.as_list() + ['%i de %i' % (current_page, total_pages,)]],
                 col_widths=['*', '*', '*', 25 * self.UNITS, 20 * self.UNITS],
                 ), Spacer(0 * self.UNITS, 5 * self.UNITS)
         ]
 
-    def create_rows_table(self, rows_data, style, max_items=10, fill_with=[], show_subtotal=False):
-        #todo Subtotal should only appear when is True
+    def create_rows_table(self, rows_data, style, subtotal, max_items=10, fill_with=[], show_subtotal=False):
         for row in rows_data:
             row[0] = Paragraph(row[0], style)
 
@@ -112,11 +119,11 @@ class DefaultStrategy(Strategy):
         while len(rows_data) < max_items:
             rows_data.append(fill_with)
 
-        rows_data.insert(0, ['Descripción', 'Unitario', 'Unidades', 'Total'])
+        rows_data.insert(0, self.TABLE_ROWS_TITLES)
 
         if show_subtotal:
             # todo Remove hardcoded value!
-            rows_data.append(['', '', 'Subtotal', '5000,00 €'])
+            rows_data.append(['', '', self.SUBTOTAL_TEXT, subtotal])
             table_style = [
                 ('TEXTCOLOR', (2, -1), (-2, -1), colors.white),
                 ('BACKGROUND', (2, -1), (-2, -1), HexColor(0x0096FF)),
@@ -144,17 +151,11 @@ class DefaultStrategy(Strategy):
             rows_data, col_widths=[110 * self.UNITS, '*', '*', '*',], style=table_style
         )
 
-    def create_invoice_footer(self):
+    def create_invoice_footer(self, footer_a_data, footer_b_data):
         # todo Remove hardcoded data
-        invoice_footer_a = self.create_table([
-            ['Base imponible', 'Impuestos aplicados', '% impuestos', 'Importe impuestos', 'Total factura'],
-            ['475,00 €', 'I.V.A.', '21%', '99,75 €', '574,75 €']
-        ])
+        invoice_footer_a = self.create_table([self.INVOICE_FOOTER_SECTION_A_TITLES, footer_a_data])
 
-        invoice_footer_b = self.create_table([
-            ['Tipo de pago', 'Entidad', 'Cuenta', 'Vencimiento'],
-            ['TRANSFER', 'MY ENTITY', 'ER 19281 12 1234567889', '30 días']
-        ])
+        invoice_footer_b = self.create_table([self.INVOICE_FOOTER_SECTION_B_TITLES, footer_b_data])
 
         return [Spacer(0, 5 * self.UNITS)] + [invoice_footer_a] + [Spacer(0, 5 * self.UNITS)] \
                          + [invoice_footer_b] + [Spacer(0, 5 * self.UNITS)]
