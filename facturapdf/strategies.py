@@ -62,11 +62,13 @@ class Strategy:
 
 
 class DefaultStrategy(Strategy):
-    def create_table(self, data, col_widths='*', row_heights=None):
+    def create_table(self, data, col_widths='*', row_heights=None, style=None):
+        style=style or self.styling.table
+
         return Table(
             data=data,
             colWidths=col_widths, rowHeights=row_heights,
-            style=self.styling.table
+            style=style
         )
 
     def create_customer_table(self, customer):
@@ -124,9 +126,7 @@ class DefaultStrategy(Strategy):
         else:
             table_style = self.styling.table_rows_without_subtotal
 
-        return self.create_table(
-            rows_data, col_widths=[110 * self.UNITS, '*', '*', '*',]
-        )
+        return self.create_table(rows_data, col_widths=[110 * self.UNITS, '*', '*', '*',], style=table_style)
 
     def create_invoice_footer(self, footer_a_data, footer_b_data):
         # todo Remove hardcoded data
