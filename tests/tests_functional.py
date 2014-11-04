@@ -40,12 +40,13 @@ class CreateInvoiceTest(TestCase):
         self.assertExtension(self.file, 'pdf')
 
 
-# Most of the invoice texts is static, only the rows and totals are
+# Most of the invoice texts are static, only the rows and totals are
 # changing from one document to another, so the idea is that you override
 # some of the properties of the InvoiceGenerator and use that class
 # to create your invoices
 class CustomInvoiceGenerator(InvoiceGenerator):
     def __init__(self, strategy=None, template=None):
         super().__init__(strategy, template)
+
         self.HEADER_TEXT = 'This is a custom header text for my invoice'
         self.HEADER_LOGO = get_initios_logo_path()
