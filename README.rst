@@ -1,6 +1,8 @@
 FACTURA PDF
 ===========
 
+Create PDF invoice according to Spanish regulations.
+
 Testing
 -------
 
