@@ -17,7 +17,6 @@ class DefaultStrategy(object):
         self.styling = styling or DefaultStyling()
 
     UNITS = mm
-    MAX_ROWS_PER_TABLE = 13
 
     CUSTOMER_SECTION_A_TITLES = ['Código de cliente', 'Nombre', 'CIF/NIF']
     CUSTOMER_SECTION_B_TITLES = ['Dirección', 'Localidad']
