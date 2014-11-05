@@ -1,7 +1,8 @@
 FACTURA PDF
 ===========
 
-### Como lanzar los test:
+Como lanzar los test:
+---------------------
 
 .. sourcecode :: shell
 python -m unittest discover tests/
