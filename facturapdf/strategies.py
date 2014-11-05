@@ -17,6 +17,7 @@ class DefaultStrategy(object):
         self.styling = styling or DefaultStyling()
 
     UNITS = mm
+    MAX_ROWS_PER_TABLE = 13
 
     CUSTOMER_SECTION_A_TITLES = ['Código de cliente', 'Nombre', 'CIF/NIF']
     CUSTOMER_SECTION_B_TITLES = ['Dirección', 'Localidad']
@@ -79,10 +80,6 @@ class DefaultStrategy(object):
     def create_rows_table(self, rows_data, subtotal, max_items=10, fill_with=[], show_subtotal=False):
         for row in rows_data:
             row[0] = Paragraph(row[0], self.styling.invoice_text)
-
-        # Fill rows with the fill_with if applies
-        while len(rows_data) < max_items:
-            rows_data.append(fill_with)
 
         rows_data.insert(0, self.TABLE_ROWS_TITLES)
 
