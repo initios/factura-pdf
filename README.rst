@@ -4,8 +4,9 @@ FACTURA PDF
 Como lanzar los test:
 ---------------------
 
-.. sourcecode :: shell
-python -m unittest discover tests/
+.. code-block:: shell-session
+
+    $ python -m unittest discover tests/
 
 
 Se generará la salida en la carpeta tests/output
