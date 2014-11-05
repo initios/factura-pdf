@@ -71,7 +71,7 @@ class DefaultStrategy(object):
             self.CUSTOMER_SECTION_D_TITLES,
             [Paragraph(customer.contact_name, self.styling.invoice_text),
              Paragraph(customer.contact_phone, self.styling.invoice_text),
-             Paragraph(customer.contact_name, self.styling.invoice_text)]
+             Paragraph(customer.contact_email, self.styling.invoice_text)]
         ])
 
         return [section_a] + [section_b] + [section_c] + \

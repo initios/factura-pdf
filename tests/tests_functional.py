@@ -1,10 +1,16 @@
 # coding=utf-8
 import os
 import unittest
+from faker import Factory
 from facturapdf import InvoiceGenerator, DefaultStrategy
 from tests.helper import get_output_folder, get_initios_logo_path
 from os.path import isdir, isfile, splitext
 from facturapdf.dtos import Customer, Metadata
+import locale
+
+
+locale.setlocale(locale.LC_ALL, '')
+fake = Factory.create('es_ES')
 
 
 class TestCase(unittest.TestCase):
@@ -25,21 +31,34 @@ class CreateInvoiceTest(TestCase):
         self.invoice_generator = CustomInvoiceGenerator()
 
     def test_can_create_an_invoice(self):
+        rows = []
+        subtotal = 0
+
+        for i in range(0, 27):
+            description = fake.sentence(nb_words=5, variable_nb_words=True)
+            unit_price = fake.pydecimal(left_digits=3, right_digits=2, positive=True)
+            amount = fake.random_int(min=1, max=15)
+            unit_total = unit_price * amount
+
+            subtotal += unit_total
+
+            rows.append([description, unit_price, amount, unit_total])
+
+        vat = subtotal * 21 / 100
+        total_invoice = subtotal + vat
+
         customer = Customer(
-            code='CUS1', name='Example Customer Name', vat='123456789X',
-            address='Long address from our customer', city='Vigo',
-            postal_code='309182', province='Pontevedra', country='España',
-            contact_name='Customer Name', contact_phone='9876542817', contact_email='mymail@python.com'
+            code='CUS1', name=fake.name(), vat=fake.bothify(text="#########?").upper(),
+            address=fake.address(), city=fake.city(),
+            postal_code=fake.postcode(), province=fake.state(), country=fake.country(),
+            contact_name=fake.name(), contact_phone=fake.phone_number(), contact_email=fake.free_email()
         )
-        rows = [['Producto de ejemplo %i' % i, i * 10, i * 100, i * 1000] for i in range(0, 27)]
-        metadata = Metadata(
-            doc_type='FACTURA', code='FRA SER 14-2014', serie='SER', date='01/12/2014'
-        )
-        subtotal = '5000,00 €'
-        footer_a_data = ['475,00 €', 'I.V.A.', '21%', '99,75 €', '574,75 €']
+
+        metadata = Metadata(doc_type='FACTURA', code='FRA SER 14-2014', serie='SER', date='01/12/2014')
+        footer_a_data = [locale.currency(subtotal), 'I.V.A.', '21%', locale.currency(vat), locale.currency(total_invoice)]
         footer_b_data = ['TRANSFER', 'MY ENTITY', 'ER 19281 12 1234567889', '30 días']
 
-        self.invoice_generator.generate(self.file, rows, customer, metadata, subtotal, footer_a_data, footer_b_data)
+        self.invoice_generator.generate(self.file, rows, customer, metadata, locale.currency(subtotal), footer_a_data, footer_b_data)
         self.assertIsFile(self.file)
         self.assertExtension(self.file, 'pdf')
 
