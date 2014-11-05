@@ -1,27 +1,13 @@
-from abc import ABCMeta, abstractmethod
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.platypus import SimpleDocTemplate, Frame, PageTemplate
 
 
-class Template:
-    UNITS = None
-    MARGIN = None
-
+class DefaultTemplate:
+    UNITS = mm
+    MARGIN = 10 * UNITS
     FIRST_PAGE_TEMPLATE_ID = 'fp'
     LATER_PAGES_TEMPLATE_ID = 'sp'
-
-    __metaclass__ = ABCMeta
-
-    @abstractmethod
-    def create_document(self, destination_file):
-        pass
-
-
-class DefaultTemplate(Template):
-    def __init__(self):
-        self.UNITS = mm
-        self.MARGIN = 10 * self.UNITS
 
     def create_document(self, destination_file):
         doc = SimpleDocTemplate(destination_file, pagesize=A4, leftMargin=self.MARGIN, rightMargin=self.MARGIN,

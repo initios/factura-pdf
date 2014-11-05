@@ -1,20 +1,20 @@
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import NextPageTemplate, Paragraph, FrameBreak, PageBreak
+from reportlab.platypus import NextPageTemplate, PageBreak
 from facturapdf.helper import chunks
-from facturapdf.templates import DefaultTemplate, Template
+from facturapdf.styles import DefaultStyling
+from facturapdf.templates import DefaultTemplate
 from .flowables import SimpleLine
 from .strategies import DefaultStrategy
 from .dtos import Customer
 
 
-class InvoiceGenerator:
-    styles = getSampleStyleSheet()
-
+class InvoiceGenerator(object):
     HEADER_LOGO = None
     HEADER_TEXT = 'Calle de la empresa 2, bajo - oficina 3'
 
+    MAX_ROWS_PER_TABLE = 20
+    FILL_ROWS_WITH = []
+
     def __init__(self, strategy=None, template=None):
-        self.invoice_text_style = self.styles.get('Normal')
         self.strategy = strategy or DefaultStrategy()
         self.template = template or DefaultTemplate()
 
@@ -22,17 +22,16 @@ class InvoiceGenerator:
         doc = self.template.create_document(destination_file)
 
         # Generation of shared flowables
-        header = self.strategy.create_header(self.HEADER_LOGO, self.HEADER_TEXT, self.invoice_text_style)
-        customer_section = self.strategy.create_customer_table(customer, self.invoice_text_style)
+        header = self.strategy.create_header(self.HEADER_LOGO, self.HEADER_TEXT)
+        customer_section = self.strategy.create_customer_table(customer)
         invoice_footer = self.strategy.create_invoice_footer(footer_a_data, footer_b_data)
-        footer = self.strategy.create_footer('Footer text with company legal information',
-                                             self.template.UNITS, self.invoice_text_style)
+        footer = self.strategy.create_footer('Footer text with company legal information', self.template.UNITS)
 
         story = [
-            NextPageTemplate(Template.FIRST_PAGE_TEMPLATE_ID)
+            NextPageTemplate(DefaultTemplate.FIRST_PAGE_TEMPLATE_ID)
         ]
 
-        rows_chunks = chunks(rows, 10)
+        rows_chunks = chunks(rows, self.MAX_ROWS_PER_TABLE, self.FILL_ROWS_WITH)
 
         for counter, row_chunk in enumerate(rows_chunks):
             is_first_page = counter == 0
@@ -45,13 +44,13 @@ class InvoiceGenerator:
                 story.extend(customer_section)
 
             story.append(
-                self.strategy.create_rows_table(row_chunk, self.invoice_text_style, subtotal, show_subtotal=is_last_page))
+                self.strategy.create_rows_table(row_chunk, subtotal, is_last_page))
 
             if is_last_page:
                 story.extend(invoice_footer)
 
             story.extend(footer)
-            story.append(NextPageTemplate(Template.LATER_PAGES_TEMPLATE_ID))
+            story.append(NextPageTemplate(DefaultTemplate.LATER_PAGES_TEMPLATE_ID))
 
             if not is_last_page:
                 story.append(PageBreak())

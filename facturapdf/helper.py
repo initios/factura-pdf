@@ -21,9 +21,15 @@ def chunks(collection, amount, fill_with=None):
         while total_items > 0 and len(copy_collection) > 0:
             chunk.append(copy_collection.pop(0))
             total_items -= 1
+
         if fill_with is not None:
-            while len(chunk) < amount:
-                chunk.append(fill_with)
+            fill(chunk, amount, fill_with)
+
         chunk_list.append(chunk)
 
     return chunk_list
+
+
+def fill(item, amount, fill_with):
+    while len(item) < amount:
+        item.append(fill_with)
