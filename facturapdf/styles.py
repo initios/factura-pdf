@@ -44,6 +44,6 @@ class DefaultStyling:
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
 
             # Alinear precios a la derecha
-            ('ALIGN', (1, 1), (-1, -2), 'RIGHT'),
+            ('ALIGN', (1, 1), (-1, -1), 'RIGHT'),
             ('ALIGN', (-1, -1), (-1, -1), 'RIGHT'),
         ]
