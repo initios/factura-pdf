@@ -1,7 +1,7 @@
 from reportlab.platypus import NextPageTemplate, PageBreak
 from facturapdf.helper import chunks
 from facturapdf.styles import DefaultStyling
-from facturapdf.templates import DefaultTemplate, Template
+from facturapdf.templates import DefaultTemplate
 from .flowables import SimpleLine
 from .strategies import DefaultStrategy
 from .dtos import Customer
@@ -28,7 +28,7 @@ class InvoiceGenerator(object):
         footer = self.strategy.create_footer('Footer text with company legal information', self.template.UNITS)
 
         story = [
-            NextPageTemplate(Template.FIRST_PAGE_TEMPLATE_ID)
+            NextPageTemplate(DefaultTemplate.FIRST_PAGE_TEMPLATE_ID)
         ]
 
         rows_chunks = chunks(rows, self.MAX_ROWS_PER_TABLE, self.FILL_ROWS_WITH)
@@ -50,7 +50,7 @@ class InvoiceGenerator(object):
                 story.extend(invoice_footer)
 
             story.extend(footer)
-            story.append(NextPageTemplate(Template.LATER_PAGES_TEMPLATE_ID))
+            story.append(NextPageTemplate(DefaultTemplate.LATER_PAGES_TEMPLATE_ID))
 
             if not is_last_page:
                 story.append(PageBreak())
