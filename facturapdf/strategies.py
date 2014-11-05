@@ -95,9 +95,7 @@ class DefaultStrategy(object):
         return self.create_table(rows_data, col_widths=[110 * self.UNITS, '*', '*', '*',], style=table_style)
 
     def create_invoice_footer(self, footer_a_data, footer_b_data):
-        # todo Remove hardcoded data
         invoice_footer_a = self.create_table([self.INVOICE_FOOTER_SECTION_A_TITLES, footer_a_data])
-
         invoice_footer_b = self.create_table([self.INVOICE_FOOTER_SECTION_B_TITLES, footer_b_data])
 
         return [Spacer(0, 5 * self.UNITS)] + [invoice_footer_a] + [Spacer(0, 5 * self.UNITS)] \
