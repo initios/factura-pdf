@@ -12,7 +12,7 @@ def get_image(path, width=1 * mm):
     return Image(path, width=width, height=(width * aspect))
 
 
-def chunks(collection, amount, fill_with=None, multidimensional=False):
+def chunks(collection, amount, fill_with=None):
     copy_collection = copy.deepcopy(collection[:])
     chunk_list = []
     while len(copy_collection) > 0:
@@ -22,19 +22,12 @@ def chunks(collection, amount, fill_with=None, multidimensional=False):
             chunk.append(copy_collection.pop(0))
             total_items -= 1
 
-        fill_if_applies(chunk, amount, fill_with, multidimensional)
+        if fill_with is not None:
+            fill(chunk, amount, fill_with)
+
         chunk_list.append(chunk)
 
     return chunk_list
-
-
-def fill_if_applies(collection, amount, fill_with, multidimensional):
-    if fill_with is not None:
-        if multidimensional is False:
-            fill(collection, amount, fill_with)
-        else:
-            for item in collection:
-                fill(item, amount, fill_with)
 
 
 def fill(item, amount, fill_with):

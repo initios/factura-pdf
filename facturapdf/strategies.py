@@ -77,9 +77,13 @@ class DefaultStrategy(object):
                 ), Spacer(0 * self.UNITS, 5 * self.UNITS)
         ]
 
-    def create_rows_table(self, rows_data, subtotal, max_items=10, fill_with=[], show_subtotal=False):
+    def create_rows_table(self, rows_data, subtotal, show_subtotal=False):
         for row in rows_data:
-            row[0] = Paragraph(row[0], self.styling.invoice_text)
+            # If an empty row is given to fill the table an exception is raised
+            try:
+                row[0] = Paragraph(row[0], self.styling.invoice_text)
+            except:
+                pass
 
         rows_data.insert(0, self.TABLE_ROWS_TITLES)
 

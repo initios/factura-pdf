@@ -11,7 +11,7 @@ class InvoiceGenerator(object):
     HEADER_LOGO = None
     HEADER_TEXT = 'Calle de la empresa 2, bajo - oficina 3'
 
-    MAX_ROWS_PER_TABLE = 15
+    MAX_ROWS_PER_TABLE = 5
     FILL_ROWS_WITH = []
 
     def __init__(self, strategy=None, template=None):
@@ -31,7 +31,7 @@ class InvoiceGenerator(object):
             NextPageTemplate(Template.FIRST_PAGE_TEMPLATE_ID)
         ]
 
-        rows_chunks = chunks(rows, self.MAX_ROWS_PER_TABLE, self.FILL_ROWS_WITH, True)
+        rows_chunks = chunks(rows, self.MAX_ROWS_PER_TABLE, self.FILL_ROWS_WITH)
 
         for counter, row_chunk in enumerate(rows_chunks):
             is_first_page = counter == 0
@@ -44,7 +44,7 @@ class InvoiceGenerator(object):
                 story.extend(customer_section)
 
             story.append(
-                self.strategy.create_rows_table(row_chunk, subtotal, show_subtotal=is_last_page))
+                self.strategy.create_rows_table(row_chunk, subtotal, is_last_page))
 
             if is_last_page:
                 story.extend(invoice_footer)
