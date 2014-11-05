@@ -1,18 +1,20 @@
-from abc import ABCMeta, abstractmethod
+# coding=utf-8
 from reportlab.lib.units import mm
 from reportlab.platypus import Table, Paragraph, Spacer, FrameBreak
 from facturapdf import SimpleLine, DefaultStyling
 from facturapdf.helper import get_image
 
 
-class Strategy:
+class DefaultStrategy(object):
     """
     This class pretends to be an overridable
     strategy generator to create, tables, headers,
     and the differents components of the pdf
     so you can swap easily the stuff you want
     """
-    __metaclass__ = ABCMeta
+
+    def __init__(self, styling=None):
+        self.styling = styling or DefaultStyling()
 
     UNITS = mm
 
@@ -26,42 +28,6 @@ class Strategy:
     INVOICE_FOOTER_SECTION_A_TITLES = ['Base imponible', 'Impuestos aplicados', '% impuestos', 'Importe impuestos', 'Total factura']
     INVOICE_FOOTER_SECTION_B_TITLES = ['Tipo de pago', 'Entidad', 'Cuenta', 'Vencimiento']
 
-    def __init__(self, styling=None):
-        self.styling = styling or DefaultStyling()
-
-        super().__init__()
-
-
-    @abstractmethod
-    def create_table(self, data, col_widths='*', row_heights=None):
-        pass
-
-    @abstractmethod
-    def create_customer_table(self, customer):
-        pass
-
-    @abstractmethod
-    def create_metadata_table(self, current_page, total_pages, metadata):
-        pass
-
-    @abstractmethod
-    def create_rows_table(self, rows_data, subtotal, max_items=10, fill_with=[]):
-        pass
-
-    @abstractmethod
-    def create_invoice_footer(self, footer_a_data, footer_b_data):
-        pass
-
-    @abstractmethod
-    def create_header(self, header_logo, header_text):
-        pass
-
-    @abstractmethod
-    def create_footer(self, text, units):
-        pass
-
-
-class DefaultStrategy(Strategy):
     def create_table(self, data, col_widths='*', row_heights=None, style=None):
         style=style or self.styling.table
 

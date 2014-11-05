@@ -1,3 +1,4 @@
+# coding=utf-8
 import os
 import unittest
 from facturapdf import InvoiceGenerator, DefaultStrategy
@@ -52,16 +53,17 @@ class CreateInvoiceTest(TestCase):
 # Check the following example that is using the functional test
 
 class CustomStrategy(DefaultStrategy):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, styling=None):
+        super(CustomStrategy, self).__init__(styling)
 
         self.CUSTOMER_SECTION_A_TITLES = ['Customer code', 'Name', 'CIF']
 
 
 class CustomInvoiceGenerator(InvoiceGenerator):
     # Please note that I am using a CustomStrategy here
-    def __init__(self, strategy=CustomStrategy(), template=None):
-        super().__init__(strategy, template)
+    def __init__(self, strategy=None, template=None):
+        super(CustomInvoiceGenerator, self).__init__(strategy, template)
 
         self.HEADER_TEXT = 'This is a custom header text for my invoice'
         self.HEADER_LOGO = get_initios_logo_path()
+

@@ -1,4 +1,3 @@
-from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import NextPageTemplate, PageBreak
 from facturapdf.helper import chunks
 from facturapdf.styles import DefaultStyling
@@ -8,7 +7,7 @@ from .strategies import DefaultStrategy
 from .dtos import Customer
 
 
-class InvoiceGenerator:
+class InvoiceGenerator(object):
     HEADER_LOGO = None
     HEADER_TEXT = 'Calle de la empresa 2, bajo - oficina 3'
 
