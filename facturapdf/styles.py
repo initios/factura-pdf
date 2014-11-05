@@ -4,12 +4,14 @@ from reportlab.lib.styles import getSampleStyleSheet
 
 
 class DefaultStyling:
+    CELL_TITLES_BACKGROUND_COLOR = HexColor(0x0096FF)
+
     def __init__(self):
         self.styles = getSampleStyleSheet()
 
         self.table = ([
             ('GRID', (0, 0), (-1, -1), 0.6, colors.black),
-            ('BACKGROUND', (0, 0), (-1, 0), HexColor(0x0096FF)),
+            ('BACKGROUND', (0, 0), (-1, 0), self.CELL_TITLES_BACKGROUND_COLOR),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
             ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ])
@@ -21,16 +23,16 @@ class DefaultStyling:
             ('BOX', (0, 1), (-1, -2), 0.6, colors.black),
 
             # Titles
-            ('BACKGROUND', (0, 0), (-1, 0), HexColor(0x0096FF)),
+            ('BACKGROUND', (0, 0), (-1, 0), self.CELL_TITLES_BACKGROUND_COLOR),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
 
-            # Alinear precios a la derecha
+            # Align prices to the right
             ('ALIGN', (1, 1), (-1, -2), 'RIGHT'),
             ('ALIGN', (-1, -1), (-1, -1), 'RIGHT'),
 
             # Subtotal
             ('TEXTCOLOR', (2, -1), (-2, -1), colors.white),
-            ('BACKGROUND', (2, -1), (-2, -1), HexColor(0x0096FF)),
+            ('BACKGROUND', (2, -1), (-2, -1), self.CELL_TITLES_BACKGROUND_COLOR),
             ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
             ('GRID', (2, -1), (-1, -1), 0.6, colors.black)
         ]
@@ -40,10 +42,10 @@ class DefaultStyling:
             ('BOX', (0, 1), (-1, -1), 0.6, colors.black),
 
             # Titles
-            ('BACKGROUND', (0, 0), (-1, 0), HexColor(0x0096FF)),
+            ('BACKGROUND', (0, 0), (-1, 0), self.CELL_TITLES_BACKGROUND_COLOR),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
 
-            # Alinear precios a la derecha
+            # Align prices to the right
             ('ALIGN', (1, 1), (-1, -1), 'RIGHT'),
             ('ALIGN', (-1, -1), (-1, -1), 'RIGHT'),
         ]
