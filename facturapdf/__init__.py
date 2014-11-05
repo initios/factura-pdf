@@ -11,7 +11,7 @@ class InvoiceGenerator(object):
     HEADER_LOGO = None
     HEADER_TEXT = 'Calle de la empresa 2, bajo - oficina 3'
 
-    MAX_ROWS_PER_TABLE = 5
+    MAX_ROWS_PER_TABLE = 20
     FILL_ROWS_WITH = []
 
     def __init__(self, strategy=None, template=None):
