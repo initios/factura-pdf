@@ -1,4 +1,13 @@
-class Customer:
+class Data(object):
+    customer = None
+    metadata = None
+    footer_a = None
+    footer_b = None
+    rows = None
+    subtotal = 0
+
+
+class Customer(object):
     def __init__(self, **kwargs):
         self.code = kwargs.get('code', None)
         self.name = kwargs.get('name', None)
@@ -13,7 +22,7 @@ class Customer:
         self.contact_email = kwargs.get('contact_email', None)
 
 
-class Metadata:
+class Metadata(object):
     def __init__(self, **kwargs):
         self.doc_type = kwargs.get('doc_type', None)
         self.code = kwargs.get('code', None)

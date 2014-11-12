@@ -18,33 +18,33 @@ class InvoiceGenerator(object):
         self.strategy = strategy or DefaultStrategy()
         self.template = template or DefaultTemplate()
 
-    def generate(self, destination_file, rows, customer, metadata, subtotal, footer_a_data, footer_b_data):
+    def generate(self, destination_file, data):
         doc = self.template.create_document(destination_file)
 
         # Generation of shared flowables
         header = self.strategy.create_header(self.HEADER_LOGO, self.HEADER_TEXT)
-        customer_section = self.strategy.create_customer_table(customer)
-        invoice_footer = self.strategy.create_invoice_footer(footer_a_data, footer_b_data)
+        customer_section = self.strategy.create_customer_table(data.customer)
+        invoice_footer = self.strategy.create_invoice_footer(data.footer_a, data.footer_b)
         footer = self.strategy.create_footer('Footer text with company legal information', self.template.UNITS)
 
         story = [
             NextPageTemplate(DefaultTemplate.FIRST_PAGE_TEMPLATE_ID)
         ]
 
-        rows_chunks = chunks(rows, self.MAX_ROWS_PER_TABLE, self.FILL_ROWS_WITH)
+        rows_chunks = chunks(data.rows, self.MAX_ROWS_PER_TABLE, self.FILL_ROWS_WITH)
 
         for counter, row_chunk in enumerate(rows_chunks):
             is_first_page = counter == 0
             is_last_page = len(rows_chunks) == counter+1
 
             story.extend(header)
-            story.extend(self.strategy.create_metadata_table(counter + 1, len(rows_chunks), metadata))
+            story.extend(self.strategy.create_metadata_table(counter + 1, len(rows_chunks), data.metadata))
 
             if is_first_page:
                 story.extend(customer_section)
 
             story.append(
-                self.strategy.create_rows_table(row_chunk, subtotal, is_last_page))
+                self.strategy.create_rows_table(row_chunk, data.subtotal, is_last_page))
 
             if is_last_page:
                 story.extend(invoice_footer)
