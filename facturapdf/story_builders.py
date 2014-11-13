@@ -7,7 +7,7 @@ class DefaultStoryBuilder(object):
         header = strategy.create_header(strategy.HEADER_LOGO, strategy.HEADER_TEXT)
         customer_section = strategy.create_customer_table(data.customer)
         invoice_footer = strategy.create_invoice_footer(data.footer_a, data.footer_b)
-        footer = strategy.create_footer('Footer text with company legal information', template.UNITS)
+        footer = strategy.create_footer(strategy.FOOTER_TEXT, template.UNITS)
 
         story = [
             NextPageTemplate(template.FIRST_PAGE_TEMPLATE_ID)

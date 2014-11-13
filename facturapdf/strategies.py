@@ -17,13 +17,12 @@ class DefaultStrategy(object):
         self.styling = styling or DefaultStyling()
 
     UNITS = mm
-
-    HEADER_LOGO = None
-    HEADER_TEXT = 'Calle de la empresa 2, bajo - oficina 3'
-
     MAX_ROWS_PER_TABLE = 20
     FILL_ROWS_WITH = []
 
+    HEADER_LOGO = None
+    HEADER_TEXT = 'Calle de la empresa 2, bajo - oficina 3'
+    FOOTER_TEXT = 'Footer text with company legal information'
     CUSTOMER_SECTION_A_TITLES = ['Código de cliente', 'Nombre', 'CIF/NIF']
     CUSTOMER_SECTION_B_TITLES = ['Dirección', 'Localidad']
     CUSTOMER_SECTION_C_TITLES = ['Cód. postal', 'Provincia', 'País']
