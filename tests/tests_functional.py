@@ -27,10 +27,9 @@ class TestCase(unittest.TestCase):
 # See below the CustomInvoiceGenerator class
 class CreateInvoiceTest(TestCase):
     def setUp(self):
-        self.file = os.path.join(get_output_folder(), "output.pdf")
         self.invoice_generator = InvoiceGenerator()
 
-    def test_can_create_an_invoice(self):
+    def test_can_create_an_invoice_with_multiple_pages(self):
         rows = []
         subtotal = 0
 
@@ -60,11 +59,12 @@ class CreateInvoiceTest(TestCase):
         data.rows = rows
         data.subtotal = subtotal
 
-        self.invoice_generator.data = data
-        self.invoice_generator.generate(self.file)
+        destionation_file = os.path.join(get_output_folder(), "mutiple_pages.pdf")
 
-        self.assertIsFile(self.file)
-        self.assertExtension(self.file, 'pdf')
+        self.invoice_generator.data = data
+        self.invoice_generator.generate(destionation_file)
+
+        self.assertIsFile(destionation_file)
 
 
 # Most of the invoice texts are static, only the rows and totals are
