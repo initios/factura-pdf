@@ -28,7 +28,7 @@ class TestCase(unittest.TestCase):
 class CreateInvoiceTest(TestCase):
     def setUp(self):
         self.file = os.path.join(get_output_folder(), "output.pdf")
-        self.invoice_generator = CustomInvoiceGenerator()
+        self.invoice_generator = InvoiceGenerator(CustomStrategy())
 
     def test_can_create_an_invoice(self):
         rows = []
@@ -67,10 +67,10 @@ class CreateInvoiceTest(TestCase):
 
 # Most of the invoice texts are static, only the rows and totals are
 # changing from one document to another, so the idea is that you override
-# some of the properties of the InvoiceGenerator and use that class
+# some of the properties of the DefaultStrategy and use that class
 # to create your invoices
 
-# You can also override strategies or templates. They exist to be overrided
+# You can also override styles, templates, or anything. They exist to be overrided
 # Check the following example that is using the functional test
 
 class CustomStrategy(DefaultStrategy):
@@ -78,13 +78,8 @@ class CustomStrategy(DefaultStrategy):
         super(CustomStrategy, self).__init__(styling)
 
         self.CUSTOMER_SECTION_A_TITLES = ['Customer code', 'Name', 'CIF']
-
-
-class CustomInvoiceGenerator(InvoiceGenerator):
-    # Please note that I am using a CustomStrategy here
-    def __init__(self, strategy=None, template=None):
-        super(CustomInvoiceGenerator, self).__init__(strategy, template)
-
         self.HEADER_TEXT = 'This is a custom header text for my invoice'
         self.HEADER_LOGO = get_initios_logo_path()
+
+
 
