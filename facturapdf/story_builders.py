@@ -4,10 +4,10 @@ from facturapdf.helper import chunks
 
 class DefaultStoryBuilder(object):
     def create(self, strategy, template, data):
-        header = strategy.create_header(strategy.HEADER_LOGO, strategy.HEADER_TEXT)
-        customer_section = strategy.create_customer_table(data.customer)
-        invoice_footer = strategy.create_invoice_footer(data.footer_a, data.footer_b)
-        footer = strategy.create_footer(strategy.FOOTER_TEXT, template.UNITS)
+        header = strategy.create_header(data)
+        customer_section = strategy.create_customer_table(data)
+        invoice_footer = strategy.create_invoice_footer(data)
+        footer = strategy.create_footer(data)
 
         story = [
             NextPageTemplate(template.FIRST_PAGE_TEMPLATE_ID)
@@ -20,13 +20,13 @@ class DefaultStoryBuilder(object):
             is_last_page = len(rows_chunks) == counter+1
 
             story.extend(header)
-            story.extend(strategy.create_metadata_table(counter + 1, len(rows_chunks), data.metadata))
+            story.extend(strategy.create_metadata_table(counter + 1, len(rows_chunks), data))
 
             if is_first_page:
                 story.extend(customer_section)
 
             story.append(
-                strategy.create_rows_table(row_chunk, data.subtotal, is_last_page))
+                strategy.create_rows_table(row_chunk, data, is_last_page))
 
             if is_last_page:
                 story.extend(invoice_footer)

@@ -28,7 +28,7 @@ class TestCase(unittest.TestCase):
 class CreateInvoiceTest(TestCase):
     def setUp(self):
         self.file = os.path.join(get_output_folder(), "output.pdf")
-        self.invoice_generator = InvoiceGenerator(CustomStrategy())
+        self.invoice_generator = InvoiceGenerator()
 
     def test_can_create_an_invoice(self):
         rows = []
@@ -47,7 +47,7 @@ class CreateInvoiceTest(TestCase):
         vat = subtotal * 21 / 100
         total_invoice = subtotal + vat
 
-        data = Data()
+        data = CustomData()
         data.customer = Customer(
             code='CUS1', name=fake.name(), vat=fake.bothify(text="#########?").upper(),
             address=fake.address(), city=fake.city(),
@@ -60,26 +60,22 @@ class CreateInvoiceTest(TestCase):
         data.rows = rows
         data.subtotal = subtotal
 
-        self.invoice_generator.generate(self.file, data)
+        self.invoice_generator.data = data
+        self.invoice_generator.generate(self.file)
+
         self.assertIsFile(self.file)
         self.assertExtension(self.file, 'pdf')
 
 
 # Most of the invoice texts are static, only the rows and totals are
 # changing from one document to another, so the idea is that you override
-# some of the properties of the DefaultStrategy and use that class
-# to create your invoices
+# some of the properties of the Data class to use your custom text
 
 # You can also override styles, templates, or anything. They exist to be overrided
 # Check the following example that is using the functional test
 
-class CustomStrategy(DefaultStrategy):
-    def __init__(self, styling=None):
-        super(CustomStrategy, self).__init__(styling)
-
-        self.CUSTOMER_SECTION_A_TITLES = ['Customer code', 'Name', 'CIF']
-        self.HEADER_TEXT = 'This is a custom header text for my invoice'
-        self.HEADER_LOGO = get_initios_logo_path()
-
-
+class CustomData(Data):
+        CUSTOMER_SECTION_A_TITLES = ['Customer code', 'Name', 'CIF']
+        HEADER_TEXT = 'This is a custom header text for my invoice'
+        HEADER_LOGO = get_initios_logo_path()
 
