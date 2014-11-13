@@ -53,11 +53,10 @@ class CreateInvoiceTest(TestCase):
             postal_code=fake.postcode(), province=fake.state(), country=fake.country(),
             contact_name=fake.name(), contact_phone=fake.phone_number(), contact_email=fake.free_email()
         )
-        data.metadata = Metadata(doc_type='FACTURA', code='FRA SER 14-2014', serie='SER', date='01/12/2014')
+        data.metadata = Metadata(doc_type='FACTURA', code='FRA SER 14-2014', serie='SER', date='01/12/2014', subtotal=subtotal)
         data.footer_a = [locale.currency(subtotal), 'I.V.A.', '21%', locale.currency(vat), locale.currency(total_invoice)]
         data.footer_b = ['TRANSFER', 'MY ENTITY', 'ER 19281 12 1234567889', '30 días']
         data.rows = rows
-        data.subtotal = subtotal
 
         destionation_file = os.path.join(get_output_folder(), "mutiple_pages.pdf")
 

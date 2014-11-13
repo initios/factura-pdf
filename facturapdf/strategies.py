@@ -88,7 +88,7 @@ class DefaultStrategy(object):
         rows_data.insert(0, data.TABLE_ROWS_TITLES)
 
         if show_subtotal:
-            rows_data.append(['', '', data.SUBTOTAL_TEXT, data.subtotal])
+            rows_data.append(['', '', data.SUBTOTAL_TEXT, data.metadata.subtotal])
             table_style = self.styling.table_rows_with_subtotal
         else:
             table_style = self.styling.table_rows_without_subtotal

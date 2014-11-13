@@ -19,7 +19,6 @@ class Data(object):
     footer_a = None
     footer_b = None
     rows = None
-    subtotal = 0
 
 
 class Customer(object):
@@ -43,6 +42,7 @@ class Metadata(object):
         self.code = kwargs.get('code', None)
         self.serie = kwargs.get('serie', None)
         self.date = kwargs.get('date', None)
+        self.subtotal = kwargs.get('subtotal', 0)
 
     def as_list(self):
         return [self.doc_type, self.code, self.serie, self.date]
