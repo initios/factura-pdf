@@ -1,6 +1,6 @@
 # coding=utf-8
 import unittest
-from facturapdf import chunks
+from facturapdf.helper import chunks
 
 
 class TestHelper(unittest.TestCase):
