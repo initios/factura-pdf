@@ -3,6 +3,12 @@ FACTURA PDF
 
 Create PDF invoice according to Spanish regulations.
 
+
+Usage
+_____
+Check tests/tests_functional.py
+
+
 Testing
 -------
 
