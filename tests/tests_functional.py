@@ -2,7 +2,7 @@
 import os
 import unittest
 from faker import Factory
-from facturapdf import InvoiceGenerator, DefaultStrategy
+from facturapdf import InvoiceGenerator
 from tests.helper import get_output_folder, get_initios_logo_path
 from os.path import isdir, isfile, splitext
 from facturapdf.dtos import Customer, Metadata, Data
