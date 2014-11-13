@@ -17,6 +17,6 @@ class InvoiceGenerator(object):
         self.data = data
 
     def generate(self, destination_file):
-        doc = self.template.create_document(destination_file)
+        doc = self.template.create_document(destination_file, self.strategy.UNITS)
         story = self.story_builder.create(self.strategy, self.template, self.data)
         doc.build(flowables=story)
