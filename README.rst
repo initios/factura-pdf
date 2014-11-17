@@ -1,15 +1,23 @@
 FACTURA PDF
 ===========
 
-Como lanzar los test:
----------------------
-
-.. sourcecode :: shell
-python -m unittest discover tests/
+Create PDF invoice according to Spanish regulations.
 
 
-Se generará la salida en la carpeta tests/output
+Usage
+_____
+Check tests/tests_functional.py
 
+
+Testing
+-------
+
+.. code-block:: shell-session
+
+    $ python -m unittest discover tests/
+
+
+Check for output files at ``tests/output`` folder.
 
 License
 -------
