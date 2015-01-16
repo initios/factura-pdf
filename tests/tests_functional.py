@@ -58,12 +58,12 @@ class CreateInvoiceTest(TestCase):
         data.footer_b = ['TRANSFER', 'MY ENTITY', 'ER 19281 12 1234567889', '30 días']
         data.rows = rows
 
-        destionation_file = os.path.join(get_output_folder(), "mutiple_pages.pdf")
+        destination_file = os.path.join(get_output_folder(), "mutiple_pages.pdf")
 
         self.invoice_generator.data = data
-        self.invoice_generator.generate(destionation_file)
+        self.invoice_generator.generate(destination_file)
 
-        self.assertIsFile(destionation_file)
+        self.assertIsFile(destination_file)
 
 
 # Most of the invoice texts are static, only the rows and totals are
