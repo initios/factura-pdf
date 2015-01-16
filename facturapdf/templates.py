@@ -12,8 +12,8 @@ class DefaultTemplate(object):
         doc = SimpleDocTemplate(destination_file, pagesize=A4, leftMargin=margin, rightMargin=margin,
                                 topMargin=margin, bottomMargin=margin, )
 
-        header_left = Frame(margin + 10, 260 * units, 30 * units, 30 * units)
-        header_right = Frame(margin + 50, 260 * units, 100 * units, 30 * units)
+        header_left = Frame(margin + 10, 260 * units, 45 * units, 30 * units)
+        header_right = Frame(60 * units, 260 * units, 150 * units, 30 * units)
         body = Frame(margin, 45 * units, doc.width, 230 * units)
         footer = Frame(margin, 20 * units, doc.width, 15 * units)
 
