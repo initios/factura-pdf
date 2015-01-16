@@ -74,7 +74,6 @@ class CreateInvoiceTest(TestCase):
 # Check the following example that is using the functional test
 
 class CustomData(Data):
-        CUSTOMER_SECTION_A_TITLES = ['Customer code', 'Name', 'CIF']
-        HEADER_TEXT = 'This is a custom header text for my invoice'
-        HEADER_LOGO = get_initios_logo_path()
-
+    CUSTOMER_SECTION_A_TITLES = ['Customer code', 'Name', 'CIF']
+    HEADER_TEXT = 'This is a custom header text for my invoice'
+    HEADER_LOGO = get_initios_logo_path()
