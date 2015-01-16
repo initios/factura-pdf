@@ -12,7 +12,7 @@ def get_image(path, width=1 * mm):
 
 
 def chunks(collection, amount, fill_with=None):
-    copy_collection = collection[:]
+    copy_collection = list(collection)
     chunk_list = []
     while len(copy_collection) > 0:
         total_items = amount
