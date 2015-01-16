@@ -1,4 +1,3 @@
-import copy
 from reportlab.lib import utils
 from reportlab.lib.units import mm
 from reportlab.platypus import Image
@@ -13,7 +12,7 @@ def get_image(path, width=1 * mm):
 
 
 def chunks(collection, amount, fill_with=None):
-    copy_collection = copy.deepcopy(collection[:])
+    copy_collection = collection[:]
     chunk_list = []
     while len(copy_collection) > 0:
         total_items = amount
