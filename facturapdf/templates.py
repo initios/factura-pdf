@@ -2,7 +2,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Frame, PageTemplate
 
 
-class DefaultTemplate:
+class DefaultTemplate(object):
     FIRST_PAGE_TEMPLATE_ID = 'fp'
     LATER_PAGES_TEMPLATE_ID = 'sp'
 
@@ -10,22 +10,15 @@ class DefaultTemplate:
         margin = 10 * units
 
         doc = SimpleDocTemplate(destination_file, pagesize=A4, leftMargin=margin, rightMargin=margin,
-                                 topMargin=margin, bottomMargin=margin, )
+                                topMargin=margin, bottomMargin=margin, )
 
-        # First page
-        fp_header_left = Frame(doc.leftMargin + 10 * units, 260 * units, 30 * units, 30 * units)
-        fp_header_right = Frame(doc.leftMargin + 50 * units, 260 * units, 100 * units, 30 * units)
-        fp_body = Frame(doc.leftMargin, 45 * units, doc.width, 230 * units)
-        fp_footer = Frame(doc.leftMargin, 20 * units, doc.width, 15 * units)
-        fp = PageTemplate(id=self.FIRST_PAGE_TEMPLATE_ID, frames=[fp_header_left, fp_header_right, fp_body, fp_footer])
+        header_left = Frame(margin + 10, 260 * units, 30 * units, 30 * units)
+        header_right = Frame(margin + 50, 260 * units, 100 * units, 30 * units)
+        body = Frame(margin, 45 * units, doc.width, 230 * units)
+        footer = Frame(margin, 20 * units, doc.width, 15 * units)
 
-        # Second page
-        sp_header_left = Frame(doc.leftMargin + 10 * units, 260 * units, 30 * units, 30 * units)
-        sp_header_right = Frame(doc.leftMargin + 50 * units, 260 * units, 100 * units, 30 * units)
-        sp_body = Frame(doc.leftMargin, 45 * units, doc.width, 230 * units)
-        sp_footer = Frame(doc.leftMargin, 20 * units, doc.width, 15 * units)
-
-        sp = PageTemplate(id=self.LATER_PAGES_TEMPLATE_ID, frames=[sp_header_left, sp_header_right, sp_body, sp_footer])
+        fp = PageTemplate(id=self.FIRST_PAGE_TEMPLATE_ID, frames=[header_left, header_right, body, footer])
+        sp = PageTemplate(id=self.LATER_PAGES_TEMPLATE_ID, frames=[header_left, header_right, body, footer])
 
         doc.addPageTemplates([fp, sp])
 
