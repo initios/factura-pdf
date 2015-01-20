@@ -12,17 +12,18 @@ def element(item):
         'spacer':     {'class': platypus.Spacer, 'cast': {0: float, 1: float}}
     }
 
-    match = re.search('(?P<name>\w+)(\[(?P<args>.+)\])?', item)
+    if isinstance(item, str):
+        match = re.search('(?P<name>\w+)(\[(?P<args>.+)\])?', item)
 
-    if match and match.group('name') in elements:
-        flowable = elements[match.group('name')]
-        args = [] if not match.group('args') else match.group('args').split(',')
+        if match and match.group('name') in elements:
+            flowable = elements[match.group('name')]
+            args = [] if not match.group('args') else match.group('args').split(',')
 
-        if 'cast' in flowable:
-            for index, cls in flowable['cast'].iteritems():
-                args[index] = cls(args[index])
+            if 'cast' in flowable:
+                for index, cls in flowable['cast'].iteritems():
+                    args[index] = cls(args[index])
 
-        return flowable['class'](*args)
+            return flowable['class'](*args)
 
     return item
 

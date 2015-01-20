@@ -108,8 +108,9 @@ class DefaultStrategy(object):
         invoice_footer_a = self.create_table([data.INVOICE_FOOTER_SECTION_A_TITLES, data.footer_a])
         invoice_footer_b = self.create_table([data.INVOICE_FOOTER_SECTION_B_TITLES, data.footer_b])
 
-        return [Spacer(0, 5 * self.UNITS)] + [invoice_footer_a] + [Spacer(0, 5 * self.UNITS)] \
-            + [invoice_footer_b] + [Spacer(0, 5 * self.UNITS)]
+        return generators.chapter(
+            'spacer[0,14]', invoice_footer_a, 'spacer[0,14]', invoice_footer_b, 'spacer[0,14]'
+        )
 
     def create_header(self, data):
         Paragraph.next_style = self.styling.invoice_text
