@@ -7,6 +7,7 @@ def element(item):
     elements = {
         'framebreak': platypus.FrameBreak,
         'simpleline': flowables.SimpleLine,
+        'paragraph': flowables.Paragraph,
     }
 
     match = re.search('(?P<name>\w+)(\[(?P<args>.+)\])?', item)

@@ -29,4 +29,6 @@ class ElementTest(unittest.TestCase):
 
     def test_can_create_simple_line_flowables(self):
         self.assertIsInstance(element('simpleline[185,0.1]',), flowables.SimpleLine)
-        
+
+    def test_can_create_paragraphs(self):
+        self.assertIsInstance(element('paragraph[Paragraph text]'), flowables.Paragraph)

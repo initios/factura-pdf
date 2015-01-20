@@ -6,9 +6,9 @@ from reportlab.lib.styles import getSampleStyleSheet
 class DefaultStyling:
     CELL_TITLES_BACKGROUND_COLOR = HexColor(0x0096FF)
 
-    def __init__(self):
-        self.styles = getSampleStyleSheet()
+    styles = getSampleStyleSheet()
 
+    def __init__(self):
         self.table = ([
             ('GRID', (0, 0), (-1, -1), 0.6, colors.black),
             ('BACKGROUND', (0, 0), (-1, 0), self.CELL_TITLES_BACKGROUND_COLOR),
@@ -16,7 +16,7 @@ class DefaultStyling:
             ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ])
 
-        self.invoice_text =  self.styles.get('Normal')
+        self.invoice_text = self.styles.get('Normal')
 
         self.table_rows_with_subtotal = [
             ('GRID', (0, 0), (-1, 0), 0.6, colors.black),

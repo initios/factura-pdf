@@ -124,7 +124,7 @@ class DefaultStrategy(object):
         ]
 
     def create_footer(self, data):
-        Paragraph.next_style = self.styling.getSampleStyleSheet
+        Paragraph.next_style = self.styling.invoice_text
 
         return [
             FrameBreak(),
