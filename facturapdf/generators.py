@@ -17,7 +17,3 @@ def element(item):
         return elements[match.group('name')](*args)
 
     return item
-
-
-def chapter(data):
-    pass

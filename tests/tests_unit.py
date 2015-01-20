@@ -5,7 +5,7 @@ import unittest
 from reportlab import platypus
 
 from facturapdf import flowables
-from facturapdf.chapters import chapter, element
+from facturapdf.generators import element
 from facturapdf.helper import chunks
 
 
