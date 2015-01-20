@@ -34,6 +34,10 @@ Creates a list of flowables passing any number of string arguments.
 
     generators.chapter('Paragraph[Cat in the hat]', 'image[hat.jpg,25]')
 
+    # Passing a string that is not a valid flowable keyword or anything that is not a string will do nothing
+    # So you can mix chapter generator with another one at once
+    generators.chapter('hello', [1, 2, 3]) # will return ['hello', [1, 2, 3]]
+
 Testing
 -------
 
