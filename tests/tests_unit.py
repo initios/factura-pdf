@@ -1,12 +1,14 @@
 # coding=utf-8
 
 import unittest
+from tests.helper import get_initios_logo_path
 
 from reportlab import platypus
 
 from facturapdf import flowables
 from facturapdf.generators import element
 from facturapdf.helper import chunks
+
 
 
 class HelperTest(unittest.TestCase):
@@ -24,6 +26,9 @@ class HelperTest(unittest.TestCase):
 
 
 class ElementTest(unittest.TestCase):
+    def setUp(self):
+        self.logo = get_initios_logo_path()
+
     def test_can_create_frame_breaks(self):
         self.assertIsInstance(element('framebreak'), platypus.doctemplate._FrameBreak)
 
@@ -32,3 +37,6 @@ class ElementTest(unittest.TestCase):
 
     def test_can_create_paragraphs(self):
         self.assertIsInstance(element('paragraph[Paragraph text]'), flowables.Paragraph)
+
+    def test_can_create_images(self):
+        self.assertIsInstance(element('image[%s]' % self.logo), platypus.Image)

@@ -1,6 +1,6 @@
 import re
 from reportlab import platypus
-from facturapdf import flowables
+from facturapdf import flowables, helper
 
 
 def element(item):
@@ -8,6 +8,7 @@ def element(item):
         'framebreak': platypus.FrameBreak,
         'simpleline': flowables.SimpleLine,
         'paragraph': flowables.Paragraph,
+        'image': helper.get_image,
     }
 
     match = re.search('(?P<name>\w+)(\[(?P<args>.+)\])?', item)
