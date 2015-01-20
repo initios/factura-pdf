@@ -39,7 +39,10 @@ class ElementTest(unittest.TestCase):
         self.assertIsInstance(element('paragraph[Paragraph text]'), flowables.Paragraph)
 
     def test_can_create_images(self):
-        self.assertIsInstance(element('image[%s]' % self.logo), platypus.Image)
+        self.assertIsInstance(element('image[%s,%s]' % (self.logo, 20)), platypus.Image)
+
+    def test_can_create_spacers(self):
+        self.assertIsInstance(element('spacer[0,5]'), platypus.Spacer)
 
 
 class ChapterTest(unittest.TestCase):

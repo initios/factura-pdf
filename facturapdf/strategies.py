@@ -115,13 +115,15 @@ class DefaultStrategy(object):
     def create_header(self, data):
         Paragraph.next_style = self.styling.invoice_text
 
-        return [
-            get_image(data.HEADER_LOGO, 40 * self.UNITS),
-            FrameBreak(),
-            Paragraph(data.HEADER_TEXT),
-            FrameBreak(),
-            Spacer(0, 5 * self.UNITS),
-        ]
+        # return [
+        #     get_image(data.HEADER_LOGO, 40 * self.UNITS),
+        #     FrameBreak(),
+        #     Paragraph(data.HEADER_TEXT),
+        #     FrameBreak(),
+        #     # Spacer(0, 5 * self.UNITS),
+        # ]
+        return generators.chapter('image[%s,113.38]' % data.HEADER_LOGO, 'framebreak',
+                                  'paragraph[%s]' % data.HEADER_TEXT, 'framebreak', 'spacer[0,14.17]')
 
     def create_footer(self, data):
         Paragraph.next_style = self.styling.invoice_text

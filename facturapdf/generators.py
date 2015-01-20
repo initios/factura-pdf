@@ -8,7 +8,8 @@ def element(item):
         'framebreak': {'class': platypus.FrameBreak},
         'simpleline': {'class': flowables.SimpleLine, 'cast': {0: float, 1: float}},
         'paragraph':  {'class': flowables.Paragraph},
-        'image':      {'class': helper.get_image},
+        'image':      {'class': helper.get_image, 'cast': {1: float}},
+        'spacer':     {'class': platypus.Spacer, 'cast': {0: float, 1: float}}
     }
 
     match = re.search('(?P<name>\w+)(\[(?P<args>.+)\])?', item)
