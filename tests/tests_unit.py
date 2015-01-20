@@ -10,7 +10,6 @@ from facturapdf.generators import element, chapter
 from facturapdf.helper import chunks
 
 
-
 class HelperTest(unittest.TestCase):
     def test_chunks(self):
         collection = [1, 2, 3, 4, 5]
