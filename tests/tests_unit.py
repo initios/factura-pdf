@@ -6,7 +6,7 @@ from tests.helper import get_initios_logo_path
 from reportlab import platypus
 
 from facturapdf import flowables
-from facturapdf.generators import element
+from facturapdf.generators import element, chapter
 from facturapdf.helper import chunks
 
 
@@ -40,3 +40,12 @@ class ElementTest(unittest.TestCase):
 
     def test_can_create_images(self):
         self.assertIsInstance(element('image[%s]' % self.logo), platypus.Image)
+
+
+class ChapterTest(unittest.TestCase):
+    def test_create_a_list_of_elements(self):
+        elements = chapter('framebreak', 'simpleline[185,0.1]', 'framebreak')
+
+        self.assertIsInstance(elements[0], platypus.doctemplate._FrameBreak)
+        self.assertIsInstance(elements[1], flowables.SimpleLine)
+        self.assertIsInstance(elements[2], platypus.doctemplate._FrameBreak)
