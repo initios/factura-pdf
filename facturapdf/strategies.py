@@ -2,7 +2,7 @@
 from reportlab.lib.units import mm
 from reportlab.platypus import Table, Spacer, FrameBreak
 
-from facturapdf import SimpleLine, DefaultStyling
+from facturapdf import SimpleLine, DefaultStyling, generators
 from facturapdf.flowables import Paragraph
 from facturapdf.helper import get_image
 
@@ -125,9 +125,4 @@ class DefaultStrategy(object):
 
     def create_footer(self, data):
         Paragraph.next_style = self.styling.invoice_text
-
-        return [
-            FrameBreak(),
-            SimpleLine(185 * self.UNITS, 0.1 * self.UNITS),
-            Paragraph(data.FOOTER_TEXT)
-        ]
+        return generators.chapter('framebreak', 'simpleline[524,0.28]', 'paragraph[%s]' % data.FOOTER_TEXT)
