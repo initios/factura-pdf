@@ -1,10 +1,9 @@
 # coding=utf-8
 from reportlab.lib.units import mm
-from reportlab.platypus import Table, Spacer, FrameBreak
+from reportlab.platypus import Table, Spacer
 
-from facturapdf import SimpleLine, DefaultStyling, generators
+from facturapdf import DefaultStyling, generators
 from facturapdf.flowables import Paragraph
-from facturapdf.helper import get_image
 
 
 class DefaultStrategy(object):
