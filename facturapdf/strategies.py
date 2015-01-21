@@ -1,10 +1,9 @@
 # coding=utf-8
 from reportlab.lib.units import mm
-from reportlab.platypus import Table, Spacer, FrameBreak
+from reportlab.platypus import Table, Spacer
 
-from facturapdf import SimpleLine, DefaultStyling
+from facturapdf import DefaultStyling, generators
 from facturapdf.flowables import Paragraph
-from facturapdf.helper import get_image
 
 
 class DefaultStrategy(object):
@@ -109,25 +108,13 @@ class DefaultStrategy(object):
         invoice_footer_a = self.create_table([data.INVOICE_FOOTER_SECTION_A_TITLES, data.footer_a])
         invoice_footer_b = self.create_table([data.INVOICE_FOOTER_SECTION_B_TITLES, data.footer_b])
 
-        return [Spacer(0, 5 * self.UNITS)] + [invoice_footer_a] + [Spacer(0, 5 * self.UNITS)] \
-            + [invoice_footer_b] + [Spacer(0, 5 * self.UNITS)]
+        return generators.chapter('spacer[0,14]', invoice_footer_a, 'spacer[0,14]', invoice_footer_b, 'spacer[0,14]')
 
     def create_header(self, data):
         Paragraph.next_style = self.styling.invoice_text
-
-        return [
-            get_image(data.HEADER_LOGO, 40 * self.UNITS),
-            FrameBreak(),
-            Paragraph(data.HEADER_TEXT),
-            FrameBreak(),
-            Spacer(0, 5 * self.UNITS),
-        ]
+        return generators.chapter('image[%s,113.38]' % data.HEADER_LOGO, 'framebreak',
+                                  'paragraph[%s]' % data.HEADER_TEXT, 'framebreak', 'spacer[0,14.17]')
 
     def create_footer(self, data):
-        Paragraph.next_style = self.styling.getSampleStyleSheet
-
-        return [
-            FrameBreak(),
-            SimpleLine(185 * self.UNITS, 0.1 * self.UNITS),
-            Paragraph(data.FOOTER_TEXT)
-        ]
+        Paragraph.next_style = self.styling.invoice_text
+        return generators.chapter('framebreak', 'simpleline[524,0.28]', 'paragraph[%s]' % data.FOOTER_TEXT)
