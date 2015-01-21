@@ -25,11 +25,11 @@ class DefaultStrategy(object):
         return Table(data=data, colWidths=col_widths or '*', rowHeights=row_heights,
                      style=style or self.styling.table)
 
-    def create_customer_table(self, data, col_widths=None, row_heights=None, style=None, paragraph_style=None):
+    def _create_customer_section_a_table(self, data, col_widths=None, row_heights=None, style=None,
+                                         paragraph_style=None):
         Paragraph.next_style = paragraph_style or self.styling.invoice_text
 
-        section_a = self.create_table(
-            [
+        return self.create_table([
                 data.CUSTOMER_SECTION_A_TITLES,
                 [Paragraph(data.customer.code), Paragraph(data.customer.name), data.customer.vat],
             ],
@@ -37,30 +37,46 @@ class DefaultStrategy(object):
             row_heights=row_heights, style=style
         )
 
-        section_b = self.create_table(
-            [
+    def _create_customer_section_b_table(self, data, col_widths=None, row_heights=None, style=None,
+                                             paragraph_style=None):
+        Paragraph.next_style = paragraph_style or self.styling.invoice_text
+
+        return self.create_table([
                 data.CUSTOMER_SECTION_B_TITLES,
                 [Paragraph(data.customer.address), Paragraph(data.customer.city)]
             ],
             col_widths=col_widths or [135 * self.UNITS, '*'],
             row_heights=row_heights, style=style
-            )
+        )
 
-        section_c = self.create_table(
-            [
+    def _create_customer_section_c_table(self, data, col_widths=None, row_heights=None, style=None,
+                                         paragraph_style=None):
+        Paragraph.next_style = paragraph_style or self.styling.invoice_text
+
+        return self.create_table([
                 data.CUSTOMER_SECTION_C_TITLES,
                 [data.customer.postal_code, Paragraph(data.customer.province), Paragraph(data.customer.country)]
             ], col_widths=col_widths or [25 * self.UNITS, '*', '*'],
             row_heights=row_heights, style=style
         )
 
-        section_d = self.create_table([
-            data.CUSTOMER_SECTION_D_TITLES,
-            [Paragraph(data.customer.contact_name), Paragraph(data.customer.contact_phone),
-             Paragraph(data.customer.contact_email)],
+    def _create_customer_section_d_table(self, data, col_widths=None, row_heights=None, style=None,
+                                         paragraph_style=None):
+        Paragraph.next_style = paragraph_style or self.styling.invoice_text
+
+        return self.create_table([
+                data.CUSTOMER_SECTION_D_TITLES,
+                [Paragraph(data.customer.contact_name), Paragraph(data.customer.contact_phone),
+                Paragraph(data.customer.contact_email)],
             ], col_widths=col_widths or '*',
             row_heights=row_heights, style=style
         )
+
+    def create_customer_table(self, data):
+        section_a = self._create_customer_section_a_table(data)
+        section_b = self._create_customer_section_b_table(data)
+        section_c = self._create_customer_section_c_table(data)
+        section_d = self._create_customer_section_d_table(data)
 
         return [section_a]+[section_b]+[section_c]+[Spacer(0, 5 * self.UNITS)]+[section_d]+[Spacer(0, 5 * self.UNITS)]
 
@@ -75,6 +91,16 @@ class DefaultStrategy(object):
                 row_heights=row_heights, style=style,
             ), Spacer(0 * self.UNITS, 5 * self.UNITS)
         ]
+
+    def _rows_with_subtotal_table(self, data, col_widths=None, row_heights=None, style=None, paragraph_style=None):
+        Paragraph.next_style = paragraph_style or self.styling.invoice_text
+        return self.create_table(data, col_widths=col_widths or [110 * self.UNITS, '*', '*', '*', ],
+                                 row_heights=row_heights, style=style or self.styling.table_rows_with_subtotal)
+
+    def _rows_without_subtotal_table(self, data, col_widths=None, row_heights=None, style=None, paragraph_style=None):
+        Paragraph.next_style = paragraph_style or self.styling.invoice_text
+        return self.create_table(data, col_widths=col_widths or [110 * self.UNITS, '*', '*', '*', ],
+                                 row_heights=row_heights, style=style or self.styling.table_rows_without_subtotal)
 
     def create_rows_table(self, rows_data, data, show_subtotal=False, col_widths=None, row_heights=None, style=None,
                           subtotal_style=None, paragraph_style=None):
@@ -91,12 +117,9 @@ class DefaultStrategy(object):
 
         if show_subtotal:
             rows_data.append(['', '', data.SUBTOTAL_TEXT, data.metadata.subtotal])
-            table_style = subtotal_style or self.styling.table_rows_with_subtotal
-        else:
-            table_style = style or self.styling.table_rows_without_subtotal
+            return self._rows_with_subtotal_table(rows_data)
 
-        return self.create_table(rows_data, col_widths=col_widths or [110 * self.UNITS, '*', '*', '*', ],
-                                 row_heights=row_heights, style=table_style)
+        return self._rows_without_subtotal_table(rows_data)
 
     def create_invoice_footer(self, data, paragraph_style=None):
         Paragraph.next_style = paragraph_style or self.styling.invoice_text
