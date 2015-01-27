@@ -1,6 +1,10 @@
 FACTURA PDF
 ===========
 
+.. image:: https://pypip.in/version/facturapdf/badge.svg
+    :target: https://pypi.python.org/pypi/facturapdf/
+    :alt: Latest Version
+
 Create PDF invoice according to Spanish regulations.
 
 
