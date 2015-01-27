@@ -32,21 +32,21 @@ class ElementTest(unittest.TestCase):
         self.assertIsInstance(element('framebreak'), platypus.doctemplate._FrameBreak)
 
     def test_can_create_simple_line_flowables(self):
-        self.assertIsInstance(element('simpleline[185,0.1]',), flowables.SimpleLine)
+        self.assertIsInstance(element('simpleline[185|0.1]',), flowables.SimpleLine)
 
     def test_can_create_paragraphs(self):
         self.assertIsInstance(element('paragraph[Paragraph text]'), flowables.Paragraph)
 
     def test_can_create_images(self):
-        self.assertIsInstance(element('image[%s,%s]' % (self.logo, 20)), platypus.Image)
+        self.assertIsInstance(element('image[%s|%s]' % (self.logo, 20)), platypus.Image)
 
     def test_can_create_spacers(self):
-        self.assertIsInstance(element('spacer[0,5]'), platypus.Spacer)
+        self.assertIsInstance(element('spacer[0|5]'), platypus.Spacer)
 
 
 class ChapterTest(unittest.TestCase):
     def test_create_a_list_of_elements(self):
-        elements = chapter('framebreak', 'simpleline[185,0.1]', 'framebreak')
+        elements = chapter('framebreak', 'simpleline[185|0.1]', 'framebreak')
 
         self.assertIsInstance(elements[0], platypus.doctemplate._FrameBreak)
         self.assertIsInstance(elements[1], flowables.SimpleLine)

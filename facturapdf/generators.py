@@ -17,7 +17,7 @@ def element(item):
 
         if match and match.group('name') in elements:
             flowable = elements[match.group('name')]
-            args = [] if not match.group('args') else match.group('args').split(',')
+            args = [] if not match.group('args') else match.group('args').split('|')
 
             if 'cast' in flowable:
                 for index, cls in flowable['cast'].iteritems():

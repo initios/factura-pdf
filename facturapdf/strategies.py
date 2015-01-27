@@ -127,13 +127,13 @@ class DefaultStrategy(object):
         invoice_footer_a = self.create_table([data.INVOICE_FOOTER_SECTION_A_TITLES, data.footer_a])
         invoice_footer_b = self.create_table([data.INVOICE_FOOTER_SECTION_B_TITLES, data.footer_b])
 
-        return generators.chapter('spacer[0,14]', invoice_footer_a, 'spacer[0,14]', invoice_footer_b, 'spacer[0,14]')
+        return generators.chapter('spacer[0|14]', invoice_footer_a, 'spacer[0|14]', invoice_footer_b, 'spacer[0|14]')
 
     def create_header(self, data, paragraph_style=None):
         Paragraph.next_style = paragraph_style or self.styling.invoice_text
-        return generators.chapter('image[%s,113.38]' % data.HEADER_LOGO, 'framebreak',
-                                  'paragraph[%s]' % data.HEADER_TEXT, 'framebreak', 'spacer[0,14.17]')
+        return generators.chapter('image[%s|113.38]' % data.HEADER_LOGO, 'framebreak',
+                                  'paragraph[%s]' % data.HEADER_TEXT, 'framebreak', 'spacer[0|14.17]')
 
     def create_footer(self, data, paragraph_style=None):
         Paragraph.next_style = paragraph_style or self.styling.invoice_text
-        return generators.chapter('framebreak', 'simpleline[524,0.28]', 'paragraph[%s]' % data.FOOTER_TEXT)
+        return generators.chapter('framebreak', 'simpleline[524|0.28]', 'paragraph[%s]' % data.FOOTER_TEXT)
