@@ -2,10 +2,10 @@
 import os
 import unittest
 from faker import Factory
-from facturapdf import InvoiceGenerator, DefaultStrategy
+from facturapdf import InvoiceGenerator
 from tests.helper import get_output_folder, get_initios_logo_path
 from os.path import isdir, isfile, splitext
-from facturapdf.dtos import Customer, Metadata
+from facturapdf.dtos import Customer, Metadata, Data
 import locale
 
 
@@ -27,10 +27,9 @@ class TestCase(unittest.TestCase):
 # See below the CustomInvoiceGenerator class
 class CreateInvoiceTest(TestCase):
     def setUp(self):
-        self.file = os.path.join(get_output_folder(), "output.pdf")
-        self.invoice_generator = CustomInvoiceGenerator()
+        self.invoice_generator = InvoiceGenerator()
 
-    def test_can_create_an_invoice(self):
+    def test_can_create_an_invoice_with_multiple_pages(self):
         rows = []
         subtotal = 0
 
@@ -47,42 +46,34 @@ class CreateInvoiceTest(TestCase):
         vat = subtotal * 21 / 100
         total_invoice = subtotal + vat
 
-        customer = Customer(
+        data = CustomData()
+        data.customer = Customer(
             code='CUS1', name=fake.name(), vat=fake.bothify(text="#########?").upper(),
             address=fake.address(), city=fake.city(),
             postal_code=fake.postcode(), province=fake.state(), country=fake.country(),
             contact_name=fake.name(), contact_phone=fake.phone_number(), contact_email=fake.free_email()
         )
+        data.metadata = Metadata(doc_type='FACTURA', code='FRA SER 14-2014', serie='SER', date='01/12/2014', subtotal=subtotal)
+        data.footer_a = [locale.currency(subtotal), 'I.V.A.', '21%', locale.currency(vat), locale.currency(total_invoice)]
+        data.footer_b = ['TRANSFER', 'MY ENTITY', 'ER 19281 12 1234567889', '30 días']
+        data.rows = rows
 
-        metadata = Metadata(doc_type='FACTURA', code='FRA SER 14-2014', serie='SER', date='01/12/2014')
-        footer_a_data = [locale.currency(subtotal), 'I.V.A.', '21%', locale.currency(vat), locale.currency(total_invoice)]
-        footer_b_data = ['TRANSFER', 'MY ENTITY', 'ER 19281 12 1234567889', '30 días']
+        destination_file = os.path.join(get_output_folder(), "mutiple_pages.pdf")
 
-        self.invoice_generator.generate(self.file, rows, customer, metadata, locale.currency(subtotal), footer_a_data, footer_b_data)
-        self.assertIsFile(self.file)
-        self.assertExtension(self.file, 'pdf')
+        self.invoice_generator.data = data
+        self.invoice_generator.generate(destination_file)
+
+        self.assertIsFile(destination_file)
 
 
 # Most of the invoice texts are static, only the rows and totals are
 # changing from one document to another, so the idea is that you override
-# some of the properties of the InvoiceGenerator and use that class
-# to create your invoices
+# some of the properties of the Data class to use your custom text
 
-# You can also override strategies or templates. They exist to be overrided
+# You can also override styles, templates, or anything. They exist to be overrided
 # Check the following example that is using the functional test
 
-class CustomStrategy(DefaultStrategy):
-    def __init__(self, styling=None):
-        super(CustomStrategy, self).__init__(styling)
-
-        self.CUSTOMER_SECTION_A_TITLES = ['Customer code', 'Name', 'CIF']
-
-
-class CustomInvoiceGenerator(InvoiceGenerator):
-    # Please note that I am using a CustomStrategy here
-    def __init__(self, strategy=None, template=None):
-        super(CustomInvoiceGenerator, self).__init__(strategy, template)
-
-        self.HEADER_TEXT = 'This is a custom header text for my invoice'
-        self.HEADER_LOGO = get_initios_logo_path()
-
+class CustomData(Data):
+    CUSTOMER_SECTION_A_TITLES = ['Customer code', 'Name', 'CIF']
+    HEADER_TEXT = 'This is a custom header text for my invoice'
+    HEADER_LOGO = get_initios_logo_path()

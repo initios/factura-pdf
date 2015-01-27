@@ -1,32 +1,24 @@
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.units import mm
 from reportlab.platypus import SimpleDocTemplate, Frame, PageTemplate
 
 
-class DefaultTemplate:
-    UNITS = mm
-    MARGIN = 10 * UNITS
+class DefaultTemplate(object):
     FIRST_PAGE_TEMPLATE_ID = 'fp'
     LATER_PAGES_TEMPLATE_ID = 'sp'
 
-    def create_document(self, destination_file):
-        doc = SimpleDocTemplate(destination_file, pagesize=A4, leftMargin=self.MARGIN, rightMargin=self.MARGIN,
-                                 topMargin=self.MARGIN, bottomMargin=self.MARGIN, )
+    def create_document(self, destination_file, units):
+        margin = 10 * units
 
-        # First page
-        fp_header_left = Frame(doc.leftMargin + 10 * self.UNITS, 260 * self.UNITS, 30 * self.UNITS, 30 * self.UNITS)
-        fp_header_right = Frame(doc.leftMargin + 50 * self.UNITS, 260 * self.UNITS, 100 * self.UNITS, 30 * self.UNITS)
-        fp_body = Frame(doc.leftMargin, 45 * self.UNITS, doc.width, 230 * self.UNITS)
-        fp_footer = Frame(doc.leftMargin, 20 * self.UNITS, doc.width, 15 * self.UNITS)
-        fp = PageTemplate(id=self.FIRST_PAGE_TEMPLATE_ID, frames=[fp_header_left, fp_header_right, fp_body, fp_footer])
+        doc = SimpleDocTemplate(destination_file, pagesize=A4, leftMargin=margin, rightMargin=margin,
+                                topMargin=margin, bottomMargin=margin, )
 
-        # Second page
-        sp_header_left = Frame(doc.leftMargin + 10 * self.UNITS, 260 * self.UNITS, 30 * self.UNITS, 30 * self.UNITS)
-        sp_header_right = Frame(doc.leftMargin + 50 * self.UNITS, 260 * self.UNITS, 100 * self.UNITS, 30 * self.UNITS)
-        sp_body = Frame(doc.leftMargin, 45 * self.UNITS, doc.width, 230 * self.UNITS)
-        sp_footer = Frame(doc.leftMargin, 20 * self.UNITS, doc.width, 15 * self.UNITS)
+        header_left = Frame(margin + 10, 260 * units, 45 * units, 30 * units)
+        header_right = Frame(60 * units, 260 * units, 150 * units, 30 * units)
+        body = Frame(margin, 45 * units, doc.width, 230 * units)
+        footer = Frame(margin, 20 * units, doc.width, 15 * units)
 
-        sp = PageTemplate(id=self.LATER_PAGES_TEMPLATE_ID, frames=[sp_header_left, sp_header_right, sp_body, sp_footer])
+        fp = PageTemplate(id=self.FIRST_PAGE_TEMPLATE_ID, frames=[header_left, header_right, body, footer])
+        sp = PageTemplate(id=self.LATER_PAGES_TEMPLATE_ID, frames=[header_left, header_right, body, footer])
 
         doc.addPageTemplates([fp, sp])
 
