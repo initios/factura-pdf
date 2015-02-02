@@ -61,3 +61,16 @@ License
 -------
 
 BSD 3-Clause License. See LICENSE file.
+
+
+Building status
+---------------
+
+.. list-table::
+
+    * - Master
+      - .. image:: https://travis-ci.org/initios/factura-pdf.svg?branch=master
+            :target: https://travis-ci.org/initios/factura-pdf
+    * - Develop
+      - .. image:: https://travis-ci.org/initios/factura-pdf.svg?branch=develop
+            :target: https://travis-ci.org/initios/factura-pdf
