@@ -56,6 +56,13 @@ Testing
 
 Check for output files at ``tests/output`` folder.
 
+Changelog
+---------
+
+* 0.0.4 (2015-02-03)
+    * Upgrade reportlab version to 3.1.44 to fix a issue with pillow
+    * Fix Python 3
+    * Several improvements on testing infrastructure: add tox andTravis-CI
 
 License
 -------
