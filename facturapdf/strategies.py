@@ -107,10 +107,10 @@ class DefaultStrategy(object):
         Paragraph.next_style = paragraph_style or self.styling.invoice_text
 
         for row in rows_data:
-            # If an empty row is given to fill the table an exception is raised
             try:
+                # If an empty row is given to fill the table an exception is raised
                 row[0] = Paragraph(row[0])
-            except:
+            except IndexError:
                 pass
 
         rows_data.insert(0, data.TABLE_ROWS_TITLES)

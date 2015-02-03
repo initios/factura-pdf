@@ -20,7 +20,7 @@ def element(item):
             args = [] if not match.group('args') else match.group('args').split('|')
 
             if 'cast' in flowable:
-                for index, cls in flowable['cast'].iteritems():
+                for index, cls in iter(flowable['cast'].items()):
                     args[index] = cls(args[index])
 
             return flowable['class'](*args)
