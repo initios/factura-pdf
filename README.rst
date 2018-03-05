@@ -1,7 +1,7 @@
 FACTURA PDF
 ===========
 
-.. image:: https://pypip.in/version/facturapdf/badge.svg
+.. image:: https://img.shields.io/pypi/v/facturapdf.svg
     :target: https://pypi.python.org/pypi/facturapdf/
     :alt: Latest Version
 
